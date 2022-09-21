@@ -1,92 +1,36 @@
 #!/usr/bin/python3
-"""
-Documentation here.
-"""
+"""A module thats contains a function that multiplies 2 matrices"""
 
 
 def matrix_mul(m_a, m_b):
-    """
-    1: Check to see if format of matricies are ok.
-    2. Check to see if matricies can be multiplied.
-    3. Check to see if matricies only contain integers or floats.
-    """
-    if not isinstance(m_a, list) or not isinstance(m_b, list):
-        wrong = "m_a" if not isinstance(m_a, list) else "m_b"
-        raise TypeError(wrong + " must be a list")
-    if len(m_a) is 0 or len(m_b) is 0:
-        wrong = "m_a" if not isinstance(m_a, list) else "m_b"
-        raise ValueError(wrong + " can't be empty")
-    if not isinstance(m_a[0], list) or not isinstance(m_b[0], list):
-        wrong = "m_a" if not isinstance(m_a[0], list) else "m_b"
-        raise TypeError(wrong + " should contain only integers or floats")
-    if len(m_a) != len(m_b[0]):
-        raise TypeError("matricies cannot be multipiled")
+    """Multiples two matrices that are conformable"""
+    if type(m_a) is not list:
+        raise TypeError("m_a must be a list")
+    if type(m_b) is not list:
+        raise TypeError("m_b must be a list")
 
-    only_len_m_a = len(m_a[0])
-    only_len_m_b = len(m_b[0])
+    if not all((isinstance(row, list) for row in m_a)):
+        raise TypeError("m_a must be a list of lists")
+    if not all((isinstance(row, list) for row in m_b)):
+        raise TypeError("m_b must be a list of lists")
 
-    for row in m_a:
-        if not isinstance(row, list):
-            raise TypeError("m_a should contain only integers or floats")
-        if only_len_m_a != len(row):
-            raise TypeError("each row of m_a must should be of the same size")
-        for col in row:
-            if not isinstance(col, (int, float)):
-                raise TypeError("m_a should contain only integers or floats")
+    if m_a == [] or m_a == [[]]:
+        raise ValueError("m_a can't be empty")
+    if m_b == [] or m_b == [[]]:
+        raise ValueError("m_b can't be empty")
 
-    for row in m_b:
-        if not isinstance(row, list):
-            raise TypeError("m_b should contain only integers or floats")
-        if only_len_m_b != len(row):
-            raise TypeError("each row of m_b must should be of the same size")
-        for col in row:
-            if not isinstance(col, (int, float)):
-                raise TypeError("m_b should contain only integers or floats")
-    new_matrix = []
-    for row_a in m_a:
-        new_matrix.append(row_a)
+    if not all((type(x) in [int, float] for row in m_a for x in row)):
+        raise TypeError("m_a should contain only integers or floats")
+    if not all((type(x) in [int, float] for row in m_b for x in row)):
+        raise TypeError("m_b should contain only integers or floats")
 
-    return ("END")
+    if not all(len(m_a[0]) == len(row) for row in m_a):
+        raise TypeError("each row of m_a must be of the same size")
+    if not all(len(m_b[0]) == len(row) for row in m_b):
+        raise TypeError("each row of m_b must be of the same size")
 
-m_a = [[1, 2], [3, 4]] # 2 x 2
-m_b = [[5, 6], [7, 8]] # 2 x 2
-print(matrix_mul(m_a, m_b)) # should return 2 x 2
-"""
-print(matrix_mul(m_b, m_a))
-m_a = [[1, 2], [4, 5], [6, 7]] # 3 x 2
-m_b = [[1, 2, 3], [4, 5, 6]]   # 2 x 3
-print(matrix_mul(m_a, m_b)) # should return 3 x 3
-print(matrix_mul(m_b, m_a))
-print("Should raise an error")
-print(matrix_mul(m_a, m_a)) # should return 3 x 3
-print(matrix_mul(m_b, m_b)) # should return 3 x 3
-m_b = [[1, 2], [3, 4, 5]]
-print(matrix_mul(m_a, m_b))
-m_a = []
-m_b = [[1, 2], [3, 4]]
-matrix_mul(m_a, m_b)
-m_a = [[1, 2], [3, 4]]
-m_b = [[1, 2], [3, 4]]
-print(matrix_mul(m_a, m_b))
-m_a = [[1, 2]]
-m_b = [[3, 4], [5, 6]]
-print(matrix_mul(m_a, m_b))
-"""
-"""
-m_a = None
-m_b = [[1, 2], [3, 4]]
-matrix_mul(m_a, m_b)
-m_a = [[1, 2, 3]]
-m_b = [[1, 2], [3, 4]]
-matrix_mul(m_a, m_b)
-print("Should fail")
-m_a = [[1, 2], [3, 4]]
-m_b = [[1, 2, 3], [4, 5]]
-matrix_mul(m_a, m_b)
-m_a = []
-m_b = [[1, 2], [3, 4]]
-matrix_mul(m_a, m_b)
-m_a = [[]]
-m_b = [[1, 2], [3, 4]]
-matrix_mul(m_a, m_b)
-"""
+    if len(m_a[0]) != len(m_b):
+        raise ValueError("m_a and m_b can't be multiplied")
+
+    return [[sum(a * b for a, b in zip(x_row, y_col)) for y_col in zip(*m_b)]
+            for x_row in m_a]
